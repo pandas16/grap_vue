@@ -1,16 +1,48 @@
 <template>
   <div id="demo">
-    <el-row type="flex" class="row-bg" justify="center" :gutter="7">
-      <el-col :span="5">
-        <el-input v-model="input" placeholder="请输入网址"></el-input>
-      </el-col>
-      <el-col :span="1">
-        <el-button type="primary" v-on:click="doSomething">解析</el-button>
-      </el-col>
-      <el-col :span="1" v-if="tableData.length > 0">
-        <el-button type="primary" v-on:click="doDownLoad">下载</el-button>
-      </el-col>
-    </el-row>
+    <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
+      <el-row type="flex" justify="space-around" align="middle" :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="链接" prop="link">
+            <el-input v-model="formData.link" placeholder="请输入链接" clearable :style="{width: '100%'}"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="起始章节" prop="startTitle">
+            <el-input v-model="formData.startTitle" placeholder="请输入起始章节" clearable :style="{width: '100%'}">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="结束章节" prop="endTitle">
+            <el-input v-model="formData.endTitle" placeholder="请输入结束章节" clearable :style="{width: '100%'}">
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row type="flex" justify="space-around" align="middle" :gutter="20">
+        <el-col :span="6">
+          <el-form-item label="标题过滤" prop="titleFilter">
+            <el-input v-model="formData.titleFilter" placeholder="请输入标题过滤" clearable :style="{width: '100%'}">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="正文过滤" prop="contentFilter">
+            <el-input v-model="formData.contentFilter" placeholder="请输入正文过滤" clearable :style="{width: '100%'}">
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-row type="flex" justify="space-around" align="middle" :gutter="6">
+            <el-button type="primary" size="small" @click="resetForm">重置</el-button>
+            <el-button type="primary" size="small"  @click="doSomething"> 解析 </el-button>
+            <el-button type="primary" size="small" v-if="tableData.length > 0" @click="doDownLoad"> 下载 </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-divider></el-divider>
     <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 60%"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
@@ -30,15 +62,28 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import Tools from '../tools/utils';
+var example = require('../../vue.config');
 
 export default {
   name: "demo",
   data () {
     return {
-      input: "",
+      formData: {
+        link: '/18_18099/', //基础url
+        startTitle: "第六百三十章",
+        endTitle: undefined,
+        titleFilter: undefined,
+        contentFilter: undefined,
+      },
+      rules: {
+        link: [{
+          required: true,
+          message: '请输入链接',
+          trigger: 'blur'
+        }],
+      },
       tableData: [], //解析列表
       multipleSelection: [],
-      baseUrl: "/18_18099/", //基础url
     };
   },
   methods: {
@@ -56,24 +101,23 @@ export default {
     },
     doSomething: async function () {
       /***********************以下是测试代码********************/
-      let isHasEndFlag = true;
+      let isHasEndFlag = Tools.isDataValid(this.formData.endTitle);
       let initIndex = -1;
-      let endName = ``;
       let urls = [];
-      let captionList = []; //标题数组 
-      let startName = `第六百三十章`;
+      let captionList = []; //标题数组
       /************************华丽的分割线*********************/
-
-      let data = await axios.get(this.baseUrl, { responseType: "blob" });
+      let base = example.devServer.proxy['/'].target;
+      console.log('===base===',base);
+      base = 'https://www.ddyueshu.com';
+      let data = await axios.get(this.formData.link, { responseType: "blob" });
       let resultText = await this.getGBKResult(data.data);
       let $ = cheerio.load(resultText, { decodeEntities: false }); //用cheerio解析页面数据
       this.tableData = [];
 
-      $($("dd:nth-of-type(n+7) a").toArray().reverse()).each(
-        (index, element) => {
+      $($("dd:nth-of-type(n+7) a").toArray().reverse()).each((index, element) => {
           let $text = $(element).text();
           let $url = $(element).attr("href");
-          if (isHasEndFlag && $text.includes(endName)) {
+          if (isHasEndFlag && $text.includes(this.formData.endTitle)) {
             initIndex = index;
           }
           if (((isHasEndFlag && initIndex > -1) || !isHasEndFlag) && /第.*章.*/.test($text)) {
@@ -81,7 +125,7 @@ export default {
             urls.unshift($url);
             this.tableData.unshift({ name: $text, url: $url });
           }
-          if ($text.includes(startName)) {
+          if ($text.includes(this.formData.startTitle)) {
             return false;
           }
         }
@@ -98,7 +142,6 @@ export default {
       });
     },
     doDownLoad: async function () {
-      console.log('===Tools===',Tools);
       if (!Tools.isDataValid(this.multipleSelection) || this.multipleSelection.length < 1) {
         console.log('===TODO 完善错误提示===');
         return;
@@ -124,9 +167,9 @@ export default {
     },
     fetchChapter: async function (row) {
       console.log('===row===', JSON.stringify(row));
-      let url = `${this.baseUrl}${row && row.url}`;
+      let url = `${this.formData.link}${row && row.url}`;
       var str = ``;
-      console.log('===url===',url);
+      console.log('===url===', url);
       let data = await axios.get(url, { responseType: "blob" });
       let resultText = await this.getGBKResult(data.data);
       let $ = cheerio.load(resultText, { decodeEntities: false }); //用cheerio解析页面数据
@@ -145,10 +188,16 @@ export default {
         }
       });
       return str;
-    }
+    },
+    resetForm() {
+      this.$refs['elForm'].resetFields()
+    },
   },
 };
 </script>
 
 <style>
+.el-divider {
+  margin: 0;
+}
 </style>
