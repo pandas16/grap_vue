@@ -2,16 +2,10 @@ module.exports = {
     devServer: {
         proxy : {
             "/" : {
-                target : this.setTarget(), // "https://www.baidu.com"
+                target : 'http://127.0.0.1:3000/', 
                 changeOrigin: true,
                 ws : true
             },
         }
     }
 };
-
-var setTarget = function (url = 'https://www.baidu.com') {
-    return url;
-}
-
-module.exports.setTarget = setTarget;

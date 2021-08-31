@@ -4,7 +4,8 @@ import Hello from '../components/HelloWorld'
 import Index from '../pages/index'
 import UserCenter from '../pages/userCenter'
 import UserInfo from '../pages/userInfo'
-import Demo from '../pages/demo'
+// import Demo from '../pages/demo'
+import Grap from '../pages/grap'
 
 Vue.use(Router)
 
@@ -32,10 +33,15 @@ export default new Router({
                 }
             ]
         },
+        // {
+        //     path: '/demo',
+        //     name: 'demo',
+        //     component: Demo
+        // },
         {
-            path: '/demo',
-            name: 'demo',
-            component: Demo
+            path: '/grap',
+            name: '爪爪',
+            component: Grap
         },
     ]
 })

@@ -7,7 +7,7 @@
           <div class="menu">
             <el-menu default-active="activeIndex" router class="el-menu-demo" mode="horizontal" @select="handleSelect">
               <el-menu-item index="/index">首页</el-menu-item>
-              <el-menu-item index="/demo">演示</el-menu-item>
+              <el-menu-item index="/grap">演示</el-menu-item>
               <el-menu-item index="/userCenter">个人中心</el-menu-item>
             </el-menu>
           </div>
