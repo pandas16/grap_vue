@@ -63,8 +63,8 @@ export default {
   data () {
     return {
       formData: {
-        link: 'https://www.lewen123.net/6/6994/', //基础url
-        startTitle: "第1章",
+        link: 'https://www.ddyueshu.com/16_16202/', //基础url
+        startTitle: "",
         endTitle: undefined,
         titleFilter: undefined,
         contentFilter: undefined,
