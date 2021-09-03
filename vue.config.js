@@ -8,5 +8,8 @@ module.exports = {
                 ws : true
             },
         }
-    }
+    },
+    publicPath: process.env.NODE_ENV === 'production'
+    ? '/grap_vue/'
+    : '/'
 };
