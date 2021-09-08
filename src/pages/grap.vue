@@ -1,39 +1,39 @@
 <template>
   <div id="grap">
-    <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
-      <el-row type="flex" justify="space-around" align="middle" :gutter="20">
-        <el-col :span="6">
+    <el-form ref="elForm" :model="formData" :rules="rules" label-width="100px">
+      <el-row :gutter="20">
+        <el-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
           <el-form-item label="链接" prop="link">
             <el-input v-model="formData.link" placeholder="请输入链接" clearable :style="{width: '100%'}"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
           <el-form-item label="起始章节" prop="startTitle">
             <el-input v-model="formData.startTitle" placeholder="请输入起始章节" clearable :style="{width: '100%'}">
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
           <el-form-item label="结束章节" prop="endTitle">
             <el-input v-model="formData.endTitle" placeholder="请输入结束章节" clearable :style="{width: '100%'}">
             </el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="space-around" align="middle" :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="20" align="middle">
+        <el-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
           <el-form-item label="标题过滤" prop="titleFilter">
             <el-input v-model="formData.titleFilter" placeholder="请输入标题过滤" clearable :style="{width: '100%'}">
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
           <el-form-item label="正文过滤" prop="contentFilter">
             <el-input v-model="formData.contentFilter" placeholder="请输入正文过滤" clearable :style="{width: '100%'}">
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :xs="20" :sm="20" :md="6" :lg="6" :xl="6">
           <el-row type="flex" justify="space-around" align="middle" :gutter="6">
             <el-button type="primary" size="small" @click="resetForm">重置</el-button>
             <el-button type="primary" size="small" @click="doSomething"> 解析 </el-button>
@@ -42,6 +42,7 @@
         </el-col>
       </el-row>
     </el-form>
+    <!-- <el-divider class="hidden-md-and-down"></el-divider> -->
     <el-divider></el-divider>
     <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 60%"
       @selection-change="handleSelectionChange">
@@ -121,6 +122,9 @@ export default {
 
 <style>
 .el-divider {
-  margin: 0;
+  margin-top: 20px;
+}
+.el-row {
+  height: 100%;
 }
 </style>
