@@ -58,6 +58,9 @@
 <script>
 import axios from "axios";
 import Tools from '../tools/utils';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.baseURL = '';
+// console.log('===URL===', axios.defaults.baseURL);
 
 export default {
   name: "grap",
@@ -116,6 +119,10 @@ export default {
     resetForm () {
       this.$refs['elForm'].resetFields()
     },
+    testQuery: async function() {
+      let result = await axios.get('vue-api/getTest');
+      console.log('===result===',result);
+    }
   },
 };
 </script>

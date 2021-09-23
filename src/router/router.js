@@ -10,6 +10,7 @@ import Grap from '../pages/grap'
 Vue.use(Router)
 
 export default new Router({
+    // base: '/grap_vue',
     routes: [
         {
             path: '/',
