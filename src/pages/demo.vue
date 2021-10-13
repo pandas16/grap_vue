@@ -62,7 +62,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import Tools from '../tools/utils';
-var example = require('../../vue.config');
 
 export default {
   name: "demo",
@@ -106,9 +105,6 @@ export default {
       let urls = [];
       let captionList = []; //标题数组
       /************************华丽的分割线*********************/
-      let base = example.devServer.proxy['/'].target;
-      console.log('===base===',base);
-      base = 'https://www.ddyueshu.com';
       let data = await axios.get(this.formData.link, { responseType: "blob" });
       let resultText = await this.getGBKResult(data.data);
       let $ = cheerio.load(resultText, { decodeEntities: false }); //用cheerio解析页面数据
